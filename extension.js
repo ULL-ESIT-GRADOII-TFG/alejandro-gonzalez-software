@@ -20,7 +20,6 @@ function activate(context) {
 			switch (message.command) {
 				case 'open':
 					vscode.window.showInformationMessage('Abriendo Navegador...');
-					console.log(message);
 					opn(message.url);
 					return;
 			}
@@ -56,7 +55,6 @@ function constructHtml(bookmarks) {
 					let link = document.querySelectorAll(".link");
 					for(let i of link){
 						i.addEventListener('click', function(){
-							console.log("click", i.value);
 							vscode.postMessage({
 								command: 'open',
 								url: i.value
