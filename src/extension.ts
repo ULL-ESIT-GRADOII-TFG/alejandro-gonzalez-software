@@ -1,11 +1,9 @@
-const vscode = require('vscode');
+import * as vscode from 'vscode';
 const opn = require('opn');
-/**
- * @param {vscode.ExtensionContext} context
- */
-function activate(context) {
+
+export function activate(context: vscode.ExtensionContext) {
 	console.log('Congratulations, your extension "webbookmarks" is now active!');
-	let disposable = vscode.commands.registerCommand('extension.openWebBookmarks', function () {
+	let disposable = vscode.commands.registerCommand('extension.openWebBookmarks', () => {
 		let bookmarks = {
 			"Google": "https://www.google.es",
 			"Amazon": "https://www.amazon.es"
@@ -29,10 +27,11 @@ function activate(context) {
 	context.subscriptions.push(disposable);
 }
 
-function deactivate() { }
+// this method is called when your extension is deactivated
+export function deactivate() { }
 
-function constructHtml(bookmarks) {
-	let table = "<table>";
+function constructHtml(bookmarks: { [key: string]: string }) {
+	let table: string = "<table>";
 	for (let key in bookmarks) {
 		table += `<tr><td>${key}</td><td><button class="link" value="${bookmarks[key]}">Enlace</button></td></tr>`;
 	}
@@ -45,7 +44,7 @@ function constructHtml(bookmarks) {
 			<title>Web Bookmarks</title>
 		</head>
 		<body>
-			<h1 id="h1"> Hello World </h1>
+			<h1> Web Booksmarks </h1>
 			${table}
 
 			<script>
@@ -64,9 +63,4 @@ function constructHtml(bookmarks) {
 			</script>
 		</body>
 	</html>`;
-}
-
-module.exports = {
-	activate,
-	deactivate
 }
