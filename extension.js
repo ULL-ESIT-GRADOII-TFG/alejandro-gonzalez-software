@@ -28,7 +28,6 @@ function activate(context) {
 
 	context.subscriptions.push(disposable);
 }
-exports.activate = activate;
 
 function deactivate() { }
 
