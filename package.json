@@ -10,14 +10,21 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:extension.helloWorld"
+		"onCommand:extension.openWebBookmarks"
 	],
 	"main": "./extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "extension.helloWorld",
-				"title": "Hello World"
+				"command": "extension.openWebBookmarks",
+				"title": "Open Web Bookmarks"
+			}
+		],
+		"keybindings": [
+			{
+				"command": "extension.openWebBookmarks",
+				"key": "ctrl+shift+l",
+				"mac": "cmd+shift+l"
 			}
 		]
 	},
@@ -32,5 +39,8 @@
 		"eslint": "^5.13.0",
 		"typescript": "^3.3.1",
 		"vscode": "^1.1.28"
+	},
+	"dependencies": {
+		"opn": "^5.4.0"
 	}
 }
