@@ -1,24 +1,34 @@
 import * as vscode from 'vscode';
+import * as fs from 'fs';
+import * as path from 'path';
 const opn = require('opn');
 
+
 export function activate(context: vscode.ExtensionContext) {
+	const bookmarksFile: string = path.join(__dirname, 'bookmarks.json');
+	console.log(bookmarksFile)
 	console.log('Congratulations, your extension "webbookmarks" is now active!');
 	let disposable = vscode.commands.registerCommand('extension.openWebBookmarks', () => {
-		let bookmarks = {
-			"Google": "https://www.google.es",
-			"Amazon": "https://www.amazon.es"
+		let bookmarks: { [key: string]: string };
+		if (!fs.existsSync(bookmarksFile)) {
+			fs.writeFileSync(bookmarksFile, "{}");
 		}
+		bookmarks = JSON.parse(fs.readFileSync(bookmarksFile, 'utf8'));
 
 		const panel = vscode.window.createWebviewPanel('webBookmarks', 'Web Bookmarks', vscode.ViewColumn.One, {
 			enableScripts: true
 		});
-		panel.webview.html = constructHtml(bookmarks);
+		panel.webview.html = indexHtml(bookmarks);
 
 		panel.webview.onDidReceiveMessage(message => {
 			switch (message.command) {
 				case 'open':
 					vscode.window.showInformationMessage('Abriendo Navegador...');
 					opn(message.url);
+					return;
+				case 'edit':
+					vscode.window.showInformationMessage('Abriendo Archivo de Configuracion...');
+					vscode.window.showTextDocument(vscode.Uri.file(bookmarksFile));
 					return;
 			}
 		}, undefined, context.subscriptions)
@@ -27,10 +37,9 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(disposable);
 }
 
-// this method is called when your extension is deactivated
 export function deactivate() { }
 
-function constructHtml(bookmarks: { [key: string]: string }) {
+function indexHtml(bookmarks: { [key: string]: string }): string {
 	let table: string = "<table>";
 	for (let key in bookmarks) {
 		table += `<tr><td>${key}</td><td><button class="link" value="${bookmarks[key]}">Enlace</button></td></tr>`;
@@ -45,6 +54,7 @@ function constructHtml(bookmarks: { [key: string]: string }) {
 		</head>
 		<body>
 			<h1> Web Booksmarks </h1>
+			<button id="edit"> Edit </button>
 			${table}
 
 			<script>
@@ -59,8 +69,21 @@ function constructHtml(bookmarks: { [key: string]: string }) {
 							});
 						},false);
 					}
+					let edit = document.querySelector("#edit");
+					edit.addEventListener('click',function(){
+						vscode.postMessage({
+							command: 'edit'
+						},false);
+					})
 				}
 			</script>
+			<style>
+				table, th, td {
+					border: 1px solid black;
+					border-collapse: collapse;
+				}
+    		</style>
 		</body>
 	</html>`;
+
 }
