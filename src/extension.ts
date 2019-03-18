@@ -32,15 +32,29 @@ export function activate(context: vscode.ExtensionContext) {
 					vscode.window.showInformationMessage('Abriendo Archivo de Configuracion...');
 					vscode.window.showTextDocument(vscode.Uri.file(bookmarksFile));
 					return;
-				case 'import':
-					let file: vscode.Uri[] | undefined = await vscode.window.showOpenDialog({ canSelectFiles: true, canSelectFolders: false, canSelectMany: false });
-					let path = (file as vscode.Uri[])[0].path;
-					let content = JSON.parse(fs.readFileSync(path, 'utf-8'));
+				case 'import': {
+					let file: vscode.Uri[] | undefined = await vscode.window.showOpenDialog({
+						canSelectFiles: true, canSelectFolders: false, canSelectMany: false, filters: {
+							"JSON (.json)": ["json"]
+						}
+					});
+					let content = JSON.parse(fs.readFileSync((file as vscode.Uri[])[0].path, 'utf-8'));
 					writeJSON(content);
 					bookmarks = loadJSON(bookmarksFile);
 					refresh(context, panel, bookmarks);
 					vscode.window.showInformationMessage('Archivo importado correctamente');
-
+					return;
+				}
+				case 'export': {
+					let file: vscode.Uri | undefined = await vscode.window.showSaveDialog({
+						filters: {
+							"JSON (.json)": ["json"]
+						}
+					})
+					fs.writeFileSync((file as vscode.Uri).path, JSON.stringify(bookmarks));
+					vscode.window.showInformationMessage('Archivo exportado correctamente');
+					return;
+				}
 			}
 		}, undefined, context.subscriptions)
 	});

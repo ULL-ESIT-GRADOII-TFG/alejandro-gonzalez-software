@@ -60,6 +60,7 @@ export function html(bookmarks: { [key: string]: string }, context: vscode.Exten
 					<div class="col">
 						<div class="d-flex flex-row justify-content-center align-items-center">
 							<button type="button" class="btn btn-secondary" id="import">Import</button>
+							<button type="button" class="btn btn-secondary ml-2" id="export">Export</button>
 						</div>
 					</div>
 				</div>
@@ -86,6 +87,12 @@ export function html(bookmarks: { [key: string]: string }, context: vscode.Exten
 					impbutton.addEventListener('click', function(){
 						vscode.postMessage({
 							command: 'import'
+						}, false);
+					});
+					let expbutton = document.querySelector("#export");
+					expbutton.addEventListener('click', function(){
+						vscode.postMessage({
+							command: 'export'
 						}, false);
 					});
 					
