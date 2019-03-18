@@ -56,6 +56,13 @@ export function html(bookmarks: { [key: string]: string }, context: vscode.Exten
 						${table}
 					</div>
 				</div>
+				<div class="row">
+					<div class="col">
+						<div class="d-flex flex-row justify-content-center align-items-center">
+							<button type="button" class="btn btn-secondary" id="import">Import</button>
+						</div>
+					</div>
+				</div>
 			</div>
 			<script>
 				window.onload = function(){
@@ -74,10 +81,16 @@ export function html(bookmarks: { [key: string]: string }, context: vscode.Exten
 						vscode.postMessage({
 							command: 'edit'
 						},false);
-					})
+					});
+					let impbutton = document.querySelector("#import");
+					impbutton.addEventListener('click', function(){
+						vscode.postMessage({
+							command: 'import'
+						}, false);
+					});
+					
 				}
 			</script>
 		</body>
 	</html>`;
 }
-
