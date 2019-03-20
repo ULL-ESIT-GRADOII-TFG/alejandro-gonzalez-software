@@ -1,5 +1,5 @@
 # Web Bookmarks Extension
-[![Build Status](https://www.travis-ci.com/ULL-ESIT-GRADOII-TFG/alejandro-gonzalez-software.svg?token=PnidsgQLm74nYpn9BCGD&branch=master)](https://www.travis-ci.com/ULL-ESIT-GRADOII-TFG/alejandro-gonzalez-software)
+[![Build Status](https://travis-ci.com/ULL-ESIT-GRADOII-TFG/alejandro-gonzalez-software.svg?token=PnidsgQLm74nYpn9BCGD&branch=master)](https://www.travis-ci.com/ULL-ESIT-GRADOII-TFG/alejandro-gonzalez-software)
 
 Web Bookmarks allows you to keep your favourites websites inside the VSCODE environment. 
 
