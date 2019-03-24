@@ -8,5 +8,5 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## [1.0.0] - 20/03/2019
 - Initial release
 
-## [1.0.1] - 24/03/2019
+## [1.0.2] - 24/03/2019
 - Fixed Import and Export Functionality on Windows Platform.

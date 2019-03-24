@@ -27,7 +27,7 @@ This extension does not have any settings for now.
 
 Initial release of Web Bookmarks
 
-### 1.0.1
-Fixed Import and Export Function on Windows Platform
+### 1.0.2
+Fixed Import and Export Functionality on Windows Platform
 
 -----------------------------------------------------------------------------------------------------------
