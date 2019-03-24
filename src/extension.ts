@@ -12,7 +12,7 @@ export function activate(context: vscode.ExtensionContext) {
 	let disposable = vscode.commands.registerCommand('extension.openWebBookmarks', () => {
 		let bookmarks: BookmarkType;
 		if (!fs.existsSync(bookmarksFile)) {
-			writeJSON({});
+			writeJSON({}, bookmarksFile);
 		}
 		bookmarks = loadJSON(bookmarksFile);
 
@@ -38,9 +38,9 @@ export function activate(context: vscode.ExtensionContext) {
 							"JSON (.json)": ["json"]
 						}
 					});
-					let content = JSON.parse(fs.readFileSync((file as vscode.Uri[])[0].path, 'utf-8'));
-					writeJSON(content);
-					bookmarks = loadJSON(bookmarksFile);
+					let content = loadJSON((file as vscode.Uri[])[0].fsPath)
+					writeJSON(content, bookmarksFile);
+					bookmarks = content;
 					refresh(context, panel, bookmarks);
 					vscode.window.showInformationMessage('Archivo importado correctamente');
 					return;
@@ -51,7 +51,7 @@ export function activate(context: vscode.ExtensionContext) {
 							"JSON (.json)": ["json"]
 						}
 					})
-					fs.writeFileSync((file as vscode.Uri).path, JSON.stringify(bookmarks));
+					writeJSON(bookmarks, (file as vscode.Uri).fsPath)
 					vscode.window.showInformationMessage('Archivo exportado correctamente');
 					return;
 				}
@@ -66,8 +66,8 @@ function loadJSON(filePath: string) {
 	return JSON.parse(fs.readFileSync(filePath, 'utf8'))
 }
 
-function writeJSON(data: Object) {
-	fs.writeFileSync(bookmarksFile, JSON.stringify(data));
+function writeJSON(data: Object, filePath: string) {
+	fs.writeFileSync(filePath, JSON.stringify(data));
 }
 
 function refresh(context: vscode.ExtensionContext, panel: vscode.WebviewPanel, bookmarks: BookmarkType) {
