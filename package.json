@@ -9,7 +9,7 @@
 		"Other"
 	],
 	"publisher": "alu0100997910",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"engines": {
 		"vscode": "^1.31.0"
 	},
@@ -17,9 +17,6 @@
 		"type": "git",
 		"url": "https://github.com/ULL-ESIT-GRADOII-TFG/alejandro-gonzalez-software"
 	},
-	"categories": [
-		"Other"
-	],
 	"activationEvents": [
 		"onCommand:extension.openWebBookmarks"
 	],
