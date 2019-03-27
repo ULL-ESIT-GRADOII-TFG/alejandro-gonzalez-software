@@ -41,17 +41,17 @@ export function html(bookmarks: Folder, context: vscode.ExtensionContext): strin
 						</div>
 					</div>
 				</div>
-				<div class="row align-items-center justify-content-center">
-					<div class="col-sm-12 col-lg-10">
-						${table}
-					</div>
-				</div>
 				<div class="row">
 					<div class="col">
 						<div class="d-flex flex-row justify-content-center align-items-center">
 							<button type="button" class="btn btn-secondary" id="import">Import</button>
 							<button type="button" class="btn btn-secondary ml-2" id="export">Export</button>
 						</div>
+					</div>
+				</div>
+				<div class="row align-items-center justify-content-center">
+					<div class="col-sm-12 col-lg-10">
+						${table}
 					</div>
 				</div>
 			</div>
