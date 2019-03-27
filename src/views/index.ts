@@ -1,38 +1,28 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 
-export function html(bookmarks: { [key: string]: string }, context: vscode.ExtensionContext): string {
+type Bookmark = string;
+
+interface Folder {
+	[key: string]: Bookmark | Folder
+}
+
+export function html(bookmarks: Folder, context: vscode.ExtensionContext): string {
 	const bootstrapJsSrc = vscode.Uri.file(path.join(context.extensionPath, 'assets/js', 'bootstrap.min.js')).with({ scheme: 'vscode-resource' });
 	const bootstrapCssSrc = vscode.Uri.file(path.join(context.extensionPath, 'assets/css', 'bootstrap.min.css')).with({ scheme: 'vscode-resource' });
 	const jquerySrc = vscode.Uri.file(path.join(context.extensionPath, 'assets/js', 'jquery-3.3.1.slim.min.js')).with({ scheme: 'vscode-resource' });
 	const popperSrc = vscode.Uri.file(path.join(context.extensionPath, 'assets/js', 'popper.min.js')).with({ scheme: 'vscode-resource' });
 
-	let table: string = `<table class="table-dark table">
-							<thead>
-								<tr>
-									<th scope="col">#</th>
-									<th scope="col">Name</th>
-									<th scope="col">URL</th>
-								</tr>
-							</thead>
-							<tbody>`;
-	let i = 0;
-	for (let key in bookmarks) {
-		i++;
-		table += `<tr><th scope="row">${i}</th>
-					<td>${key}</td>
-					<td><button type="button" class="btn btn-link btn-sm">${bookmarks[key]}</button></td></tr>`
-	}
-	table += `</tbody></table>`;
+	let table: string = recursiveExplore(bookmarks);
 
 	return `
 	<!DOCTYPE html>
 	<html>
 		<head>
 			<link rel="stylesheet" href="${bootstrapCssSrc}">
-			<script src="${bootstrapJsSrc}"></script>
 			<script src="${jquerySrc}"></script>
 			<script src="${popperSrc}"></script>
+			<script src="${bootstrapJsSrc}"></script>
 			<meta charset="UTF-8">
 			<title>Web Bookmarks</title>
 		</head>
@@ -52,7 +42,7 @@ export function html(bookmarks: { [key: string]: string }, context: vscode.Exten
 					</div>
 				</div>
 				<div class="row align-items-center justify-content-center">
-					<div class="col-sm-12 col-lg-8">
+					<div class="col-sm-12 col-lg-10">
 						${table}
 					</div>
 				</div>
@@ -68,7 +58,7 @@ export function html(bookmarks: { [key: string]: string }, context: vscode.Exten
 			<script>
 				window.onload = function(){
 					const vscode = acquireVsCodeApi();
-					let link = document.querySelectorAll(".btn-link");
+					let link = document.querySelectorAll(".bookmark");
 					for(let i of link){
 						i.addEventListener('click', function(){
 							vscode.postMessage({
@@ -100,4 +90,43 @@ export function html(bookmarks: { [key: string]: string }, context: vscode.Exten
 			</script>
 		</body>
 	</html>`;
+}
+
+
+let level = 0;
+function recursiveExplore(data: Folder) {
+	console.log("llamada a recursive");
+	let table = "";
+	for (const [key, value] of Object.entries(data)) {
+		if (typeof (value as Bookmark) == 'string') {
+			console.log("bookmark");
+			table += `
+        		<ul class="mt-2 mb-2 list-group list-group-horizontal text-white">
+				  	<li class="col-3 d-flex align-items-center justify-content-center list-group-item bg-secondary">${key}</li>
+					<li class="list-group-item bg-secondary flex-fill"><button class="btn btn-link bookmark text-primary">${value}</button></li>
+				</ul>`;
+		}
+		else {
+			console.log("folder");
+			level++;
+			let dummy = recursiveExplore(value as Folder);
+			table += `
+				<div class="accordion mb-2" id="accordion-${level}-${key}">
+					<div class="card rounded bg-secondary text-white">
+						<div class="card-header" id="header-${level}-${key}">
+							<h3 style="cursor:pointer;" data-toggle="collapse" data-target="#folder-${level}-${key}" aria-expanded="true" aria-controls="#folder-${level}-${key}">
+          						${key}
+        					</h3>
+            				<h3 style="cursor:pointer;" data-toggle="collapse" data-target="#folder--${level}-${key}"></h3>
+        				</div>
+        				<div id="folder-${level}-${key}" class="collapse" data-parent="#accordion-${level}-${key}">
+							<div class="card-body">
+						  		${dummy}
+							</div>
+        				</div>
+    				</div>
+        		</div>`;
+		}
+	}
+	return table;
 }
