@@ -115,9 +115,9 @@ function recursiveExplore(data: Folder) {
 					<div class="card rounded bg-secondary text-white">
 						<div class="card-header" id="header-${level}-${key}">
 							<h3 style="cursor:pointer;" data-toggle="collapse" data-target="#folder-${level}-${key}" aria-expanded="true" aria-controls="#folder-${level}-${key}">
-          						${key}
+          						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M11 5c-1.629 0-2.305-1.058-4-3h-7v20h24v-17h-13z" fill="white"/></svg><span class="ml-2">${key}</span>
         					</h3>
-            				<h3 style="cursor:pointer;" data-toggle="collapse" data-target="#folder--${level}-${key}"></h3>
+            				<h3 style="cursor:pointer;" data-toggle="collapse" data-target="#folder-${level}-${key}"></h3>
         				</div>
         				<div id="folder-${level}-${key}" class="collapse" data-parent="#accordion-${level}-${key}">
 							<div class="card-body">
