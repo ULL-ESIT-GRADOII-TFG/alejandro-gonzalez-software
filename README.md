@@ -46,4 +46,5 @@ Fixed Import and Export Functionality on Windows Platform.
 Added the functionality of having folders in the bookmarks.
 #### Changed
 There is a new JSON Structure for the bookmarks JSON file to match the new forlder functionality.
+
 -----------------------------------------------------------------------------------------------------------
