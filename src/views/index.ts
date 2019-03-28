@@ -95,11 +95,9 @@ export function html(bookmarks: Folder, context: vscode.ExtensionContext): strin
 
 let level = 0;
 function recursiveExplore(data: Folder) {
-	console.log("llamada a recursive");
 	let table = "";
 	for (const [key, value] of Object.entries(data)) {
 		if (typeof (value as Bookmark) == 'string') {
-			console.log("bookmark");
 			table += `
         		<ul class="mt-2 mb-2 list-group list-group-horizontal text-white">
 				  	<li class="col-3 d-flex align-items-center justify-content-center list-group-item bg-secondary">${key}</li>
@@ -107,7 +105,6 @@ function recursiveExplore(data: Folder) {
 				</ul>`;
 		}
 		else {
-			console.log("folder");
 			level++;
 			let dummy = recursiveExplore(value as Folder);
 			table += `
