@@ -1,5 +1,6 @@
 .vscode/**
 .vscode-test/**
+out/bookmarks.json
 out/test/**
 src/**
 .gitignore

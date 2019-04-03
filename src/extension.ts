@@ -4,11 +4,19 @@ import * as path from 'path';
 import * as indexView from './views/index';
 import { BookmarkType, JSONLoadError } from './types';
 const opn = require('open');
-
-const bookmarksFile: string = path.join(__dirname, 'bookmarks.json');
+export const i18n = require('i18n');
 
 export function activate(context: vscode.ExtensionContext) {
 	console.log('Congratulations, your extension "webbookmarks" is now active!');
+
+	const bookmarksFile: string = path.join(__dirname, 'bookmarks.json');
+	const language = vscode.workspace.getConfiguration('webbookmarks').language;
+
+	i18n.configure({
+		directory: path.join(context.extensionPath, 'locales')
+	})
+
+	i18n.setLocale(language);
 	let panel: vscode.WebviewPanel;
 	let disposable = vscode.commands.registerCommand('extension.openWebBookmarks', () => {
 		try {
@@ -33,11 +41,11 @@ export function activate(context: vscode.ExtensionContext) {
 				panel.webview.onDidReceiveMessage(async message => {
 					switch (message.command) {
 						case 'open':
-							vscode.window.showInformationMessage('Abriendo Navegador...');
+							vscode.window.showInformationMessage(i18n.__('open'));
 							opn(message.url);
 							return;
 						case 'edit':
-							vscode.window.showInformationMessage('Abriendo Archivo de Configuracion...');
+							vscode.window.showInformationMessage(i18n.__('edit'));
 							vscode.window.showTextDocument(vscode.Uri.file(bookmarksFile));
 							return;
 						case 'import': {
@@ -51,7 +59,7 @@ export function activate(context: vscode.ExtensionContext) {
 								writeJSON(content, bookmarksFile);
 								bookmarks = content;
 								refresh(context, panel, bookmarks);
-								vscode.window.showInformationMessage('Archivo importado correctamente');
+								vscode.window.showInformationMessage(i18n.__('import'));
 								return;
 							}
 							catch (e) {
@@ -69,7 +77,7 @@ export function activate(context: vscode.ExtensionContext) {
 								}
 							})
 							writeJSON(bookmarks, (file as vscode.Uri).fsPath)
-							vscode.window.showInformationMessage('Archivo exportado correctamente');
+							vscode.window.showInformationMessage(i18n.__('export'));
 							return;
 						}
 					}
@@ -107,7 +115,7 @@ function loadJSON(filePath: string) {
 		return json;
 	}
 	catch (err) {
-		throw new JSONLoadError("Archivo JSON Invalido", filePath);
+		throw new JSONLoadError(i18n.__('errorLoadJson'), filePath);
 	}
 
 }

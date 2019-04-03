@@ -1,0 +1,9 @@
+{
+    "errorLoadJson": "Archivo JSON invalido...",
+    "edit": "Abriendo Archivo de Configuracion...",
+    "open": "Abriendo Navegador",
+    "import": "Archivo Importado Correctamente",
+    "export": "Archivo Exportado Correctamente",
+    "impButton": "Importar",
+    "expButton": "Exportar"
+}

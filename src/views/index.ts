@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
+import { i18n } from '../extension'
 
 type Bookmark = string;
 
@@ -44,8 +45,8 @@ export function html(bookmarks: Folder, context: vscode.ExtensionContext): strin
 				<div class="row">
 					<div class="col">
 						<div class="d-flex flex-row justify-content-center align-items-center">
-							<button type="button" class="btn btn-secondary" id="import">Import</button>
-							<button type="button" class="btn btn-secondary ml-2" id="export">Export</button>
+							<button type="button" class="btn btn-secondary" id="import">${i18n.__('impButton')}</button>
+							<button type="button" class="btn btn-secondary ml-2" id="export">${i18n.__('expButton')}</button>
 						</div>
 					</div>
 				</div>

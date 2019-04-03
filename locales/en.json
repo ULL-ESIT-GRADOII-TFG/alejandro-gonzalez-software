@@ -1,0 +1,9 @@
+{
+    "errorLoadJson": "Invalid JSON file...",
+    "edit": "Opening Config File...",
+    "open": "Opening Browser...",
+    "import": "File imported successfully...",
+    "export": "File exported successfully...",
+    "impButton": "Import",
+    "expButton": "Export"
+}
