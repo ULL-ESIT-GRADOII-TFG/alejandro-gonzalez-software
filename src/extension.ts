@@ -9,65 +9,86 @@ const bookmarksFile: string = path.join(__dirname, 'bookmarks.json');
 
 export function activate(context: vscode.ExtensionContext) {
 	console.log('Congratulations, your extension "webbookmarks" is now active!');
+	let panel: vscode.WebviewPanel;
 	let disposable = vscode.commands.registerCommand('extension.openWebBookmarks', () => {
 		try {
-			let bookmarks: BookmarkType;
-			if (!fs.existsSync(bookmarksFile)) {
-				writeJSON({}, bookmarksFile);
+			const columnToShowIn = vscode.window.activeTextEditor ? vscode.window.activeTextEditor.viewColumn : undefined;
+			if (panel) {
+				panel.reveal(columnToShowIn);
 			}
-			bookmarks = loadJSON(bookmarksFile);
+			else {
+				let bookmarks: BookmarkType;
+				if (!fs.existsSync(bookmarksFile)) {
+					writeJSON({}, bookmarksFile);
+				}
+				bookmarks = loadJSON(bookmarksFile);
 
-			const panel = vscode.window.createWebviewPanel('webBookmarks', 'Web Bookmarks', vscode.ViewColumn.One, {
-				enableScripts: true,
-				localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath, 'assets'))]
-			});
-			panel.webview.html = indexView.html(bookmarks, context);
+				panel = vscode.window.createWebviewPanel('webBookmarks', 'Web Bookmarks', vscode.ViewColumn.One, {
+					enableScripts: true,
+					localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath, 'assets'))]
+				});
 
-			panel.webview.onDidReceiveMessage(async message => {
-				switch (message.command) {
-					case 'open':
-						vscode.window.showInformationMessage('Abriendo Navegador...');
-						opn(message.url);
-						return;
-					case 'edit':
-						vscode.window.showInformationMessage('Abriendo Archivo de Configuracion...');
-						vscode.window.showTextDocument(vscode.Uri.file(bookmarksFile));
-						return;
-					case 'import': {
-						try {
-							let file: vscode.Uri[] | undefined = await vscode.window.showOpenDialog({
-								canSelectFiles: true, canSelectFolders: false, canSelectMany: false, filters: {
+				panel.webview.html = indexView.html(bookmarks, context);
+
+				panel.webview.onDidReceiveMessage(async message => {
+					switch (message.command) {
+						case 'open':
+							vscode.window.showInformationMessage('Abriendo Navegador...');
+							opn(message.url);
+							return;
+						case 'edit':
+							vscode.window.showInformationMessage('Abriendo Archivo de Configuracion...');
+							vscode.window.showTextDocument(vscode.Uri.file(bookmarksFile));
+							return;
+						case 'import': {
+							try {
+								let file: vscode.Uri[] | undefined = await vscode.window.showOpenDialog({
+									canSelectFiles: true, canSelectFolders: false, canSelectMany: false, filters: {
+										"JSON (.json)": ["json"]
+									}
+								});
+								let content = loadJSON((file as vscode.Uri[])[0].fsPath)
+								writeJSON(content, bookmarksFile);
+								bookmarks = content;
+								refresh(context, panel, bookmarks);
+								vscode.window.showInformationMessage('Archivo importado correctamente');
+								return;
+							}
+							catch (e) {
+								if (e instanceof JSONLoadError) {
+									vscode.window.showErrorMessage(e.message);
+									vscode.window.showTextDocument(vscode.Uri.file(e.path));
+								}
+								return;
+							}
+						}
+						case 'export': {
+							let file: vscode.Uri | undefined = await vscode.window.showSaveDialog({
+								filters: {
 									"JSON (.json)": ["json"]
 								}
-							});
-							let content = loadJSON((file as vscode.Uri[])[0].fsPath)
-							writeJSON(content, bookmarksFile);
-							bookmarks = content;
-							refresh(context, panel, bookmarks);
-							vscode.window.showInformationMessage('Archivo importado correctamente');
-							return;
-						}
-						catch (e) {
-							if (e instanceof JSONLoadError) {
-								vscode.window.showErrorMessage(e.message);
-								vscode.window.showTextDocument(vscode.Uri.file(e.path));
-							}
+							})
+							writeJSON(bookmarks, (file as vscode.Uri).fsPath)
+							vscode.window.showInformationMessage('Archivo exportado correctamente');
 							return;
 						}
 					}
-					case 'export': {
-						let file: vscode.Uri | undefined = await vscode.window.showSaveDialog({
-							filters: {
-								"JSON (.json)": ["json"]
-							}
-						})
-						writeJSON(bookmarks, (file as vscode.Uri).fsPath)
-						vscode.window.showInformationMessage('Archivo exportado correctamente');
-						return;
-					}
-				}
-			}, undefined, context.subscriptions)
+				}, undefined, context.subscriptions)
 
+				panel.onDidChangeViewState(e => {
+					try {
+						const panel = e.webviewPanel;
+						bookmarks = loadJSON(bookmarksFile);
+						refresh(context, panel, bookmarks);
+					}
+					catch (e) {
+						if (e instanceof JSONLoadError) {
+							vscode.window.showErrorMessage(e.message);
+							vscode.window.showTextDocument(vscode.Uri.file(e.path));
+						}
+					}
+				}, null, context.subscriptions);
+			}
 		}
 		catch (e) {
 			if (e instanceof JSONLoadError) {
