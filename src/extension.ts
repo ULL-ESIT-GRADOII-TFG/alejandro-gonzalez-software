@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as indexView from './views/index';
 import { BookmarkType, JSONLoadError } from './types';
-const opn = require('opn');
+const opn = require('open');
 
 const bookmarksFile: string = path.join(__dirname, 'bookmarks.json');
 
