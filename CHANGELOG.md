@@ -16,13 +16,13 @@ Theme Configs
 ### Added
 - Added the functionality of having folders in the bookmarks.
 ### Changed
-- There is a new JSON Structure for the bookmarks JSON file to match the new forlder functionality.
+- There is a new JSON Structure for the bookmarks JSON file to match the new folder functionality.
 
 ### [1.2.0] - 06/04/2019
 #### Added
-- Autorefresh of the webview when refocus
-- Only one panel open
+- Autorefresh of the webview when refocus.
+- Only one panel open.
 - Multilanguage Support, currently Spanish and English.
-- Error Handling for better UX
+- Error Handling for better UX.
 #### Changed
-- The save location of bookmarks.json is changed to remain accesible after extensions updates
+- The save location of bookmarks.json is changed to remain accesible after extension updates.
