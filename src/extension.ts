@@ -8,15 +8,17 @@ export const i18n = require('i18n');
 
 export function activate(context: vscode.ExtensionContext) {
 	console.log('Congratulations, your extension "webbookmarks" is now active!');
-
-	const bookmarksFile: string = path.join(__dirname, 'bookmarks.json');
-	const language = vscode.workspace.getConfiguration('webbookmarks').language;
+	if (!fs.existsSync(context.globalStoragePath)) {
+		fs.mkdirSync(context.globalStoragePath)
+	}
+	const bookmarksFile: string = path.join(context.globalStoragePath, 'bookmarks.json');
+	const config = vscode.workspace.getConfiguration('webbookmarks');
 
 	i18n.configure({
 		directory: path.join(context.extensionPath, 'locales')
 	})
 
-	i18n.setLocale(language);
+	i18n.setLocale(config.language);
 	let panel: vscode.WebviewPanel;
 	let disposable = vscode.commands.registerCommand('extension.openWebBookmarks', () => {
 		try {
