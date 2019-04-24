@@ -27,7 +27,7 @@ Theme Configs
 #### Changed
 - The save location of bookmarks.json is changed to remain accesible after extension updates.
 
-### [1.2.1] - 24/04/2019
+### [1.2.3] - 24/04/2019
 #### Fixed
 - Reopen Bug
 

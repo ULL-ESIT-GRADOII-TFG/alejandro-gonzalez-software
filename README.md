@@ -63,7 +63,7 @@ This extension is require vscode version ^1.31.0.
 #### Changed
 - The save location of bookmarks.json was changed to remain accesible after extension updates.
 
-### 1.2.1
+### 1.2.3
 #### Fixed
 - Reopen Bug
 
