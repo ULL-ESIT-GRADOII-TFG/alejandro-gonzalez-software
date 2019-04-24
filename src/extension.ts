@@ -19,7 +19,7 @@ export function activate(context: vscode.ExtensionContext) {
 	})
 
 	i18n.setLocale(config.language);
-	let panel: vscode.WebviewPanel;
+	let panel: vscode.WebviewPanel | undefined;
 	let disposable = vscode.commands.registerCommand('extension.openWebBookmarks', () => {
 		try {
 			const columnToShowIn = vscode.window.activeTextEditor ? vscode.window.activeTextEditor.viewColumn : undefined;
@@ -60,7 +60,7 @@ export function activate(context: vscode.ExtensionContext) {
 								let content = loadJSON((file as vscode.Uri[])[0].fsPath)
 								writeJSON(content, bookmarksFile);
 								bookmarks = content;
-								refresh(context, panel, bookmarks);
+								refresh(context, panel as vscode.WebviewPanel, bookmarks);
 								vscode.window.showInformationMessage(i18n.__('import'));
 								return;
 							}
@@ -98,6 +98,10 @@ export function activate(context: vscode.ExtensionContext) {
 						}
 					}
 				}, null, context.subscriptions);
+
+				panel.onDidDispose(() => {
+					panel = undefined;
+				}, null, context.subscriptions)
 			}
 		}
 		catch (e) {
