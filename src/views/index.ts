@@ -21,9 +21,6 @@ export function html(bookmarks: Folder, context: vscode.ExtensionContext): strin
 	<html>
 		<head>
 			<link rel="stylesheet" href="${bootstrapCssSrc}">
-			<script src="${jquerySrc}"></script>
-			<script src="${popperSrc}"></script>
-			<script src="${bootstrapJsSrc}"></script>
 			<meta charset="UTF-8">
 			<title>Web Bookmarks</title>
 		</head>
@@ -50,7 +47,7 @@ export function html(bookmarks: Folder, context: vscode.ExtensionContext): strin
 						</div>
 					</div>
 				</div>
-				<div class="row align-items-center justify-content-center">
+				<div class="row align-items-center justify-content-center mt-2">
 					<div class="col-sm-12 col-lg-10">
 						${table}
 					</div>
@@ -89,6 +86,9 @@ export function html(bookmarks: Folder, context: vscode.ExtensionContext): strin
 					
 				}
 			</script>
+			<script src="${jquerySrc}"></script>
+			<script src="${popperSrc}"></script>
+			<script src="${bootstrapJsSrc}"></script>
 		</body>
 	</html>`;
 }
@@ -101,23 +101,24 @@ function recursiveExplore(data: Folder) {
 		if (typeof (value as Bookmark) == 'string') {
 			table += `
         		<ul class="mt-2 mb-2 list-group list-group-horizontal text-white">
-				  	<li class="col-3 d-flex align-items-center justify-content-center list-group-item bg-secondary">${key}</li>
-					<li class="list-group-item bg-secondary flex-fill"><button class="btn btn-link bookmark text-primary">${value}</button></li>
+				  	<li class="col-2 d-flex align-items-center justify-content-center list-group-item bg-secondary">${key}</li>
+					<li class="list-group-item bg-secondary flex-fill"><button class="btn btn-link bookmark text-warning">${value}</button></li>
 				</ul>`;
 		}
 		else {
 			level++;
 			let dummy = recursiveExplore(value as Folder);
+			level--;
+			let formattedKey = key.replace(' ', '-')
 			table += `
-				<div class="accordion mb-2" id="accordion-${level}-${key}">
+				<div class="accordion mb-2" id="accordion-${level}-${formattedKey}">
 					<div class="card rounded bg-secondary text-white">
-						<div class="card-header" id="header-${level}-${key}">
-							<h3 style="cursor:pointer;" data-toggle="collapse" data-target="#folder-${level}-${key}" aria-expanded="true" aria-controls="#folder-${level}-${key}">
+						<div class="card-header" id="header-${level}-${formattedKey}">
+							<h3 style="cursor:pointer;" data-toggle="collapse" data-target="#folder-${level}-${formattedKey}" aria-expanded="true" aria-controls="#folder-${level}-${formattedKey}">
           						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M11 5c-1.629 0-2.305-1.058-4-3h-7v20h24v-17h-13z" fill="white"/></svg><span class="ml-2">${key}</span>
         					</h3>
-            				<h3 style="cursor:pointer;" data-toggle="collapse" data-target="#folder-${level}-${key}"></h3>
         				</div>
-        				<div id="folder-${level}-${key}" class="collapse" data-parent="#accordion-${level}-${key}">
+        				<div id="folder-${level}-${formattedKey}" class="collapse" data-parent="#accordion-${level}-${formattedKey}">
 							<div class="card-body">
 						  		${dummy}
 							</div>
