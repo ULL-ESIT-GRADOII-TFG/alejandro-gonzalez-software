@@ -2,6 +2,7 @@
 	"name": "webbookmarks",
 	"displayName": "Web Bookmarks",
 	"description": "Web Bookmarks for VSCODE.",
+	"icon": "logo.png",
 	"author": {
 		"name": "Alejandro Gonzalez Alonso"
 	},
